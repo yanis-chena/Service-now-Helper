@@ -1,0 +1,60 @@
+{
+  "manifest_version": 3,
+  "name": "SN Incident Helper",
+  "version": "1.0.0",
+  "description": "Remplit automatiquement la description des incidents ServiceNow.",
+  "permissions": [
+    "scripting",
+    "activeTab",
+    "tabs",
+    "webNavigation"
+  ],
+  "host_permissions": [
+    "https://groupama.service-now.com/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "48": "icon.png"
+    },
+    "default_title": "SN Incident Helper"
+  },
+  "icons": {
+    "48": "icon.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "commands": {
+    "trame-assistance": {
+      "suggested_key": {
+        "default": "Alt+W"
+      },
+      "description": "Ins\u00e9rer la Trame Assistance"
+    },
+    "trame-tech": {
+      "suggested_key": {
+        "default": "Alt+X"
+      },
+      "description": "Ins\u00e9rer la Trame Tech"
+    },
+    "remplir-trame": {
+      "suggested_key": {
+        "default": "Alt+V"
+      },
+      "description": "Remplir trame existante"
+    }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "content.js",
+        "content_trame.js",
+        "content_assistance.js"
+      ],
+      "matches": [
+        "https://groupama.service-now.com/*"
+      ]
+    }
+  ]
+}

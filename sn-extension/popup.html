@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SN Incident Helper</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;600&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #16202e;
+      --bg2:     #1e2d3f;
+      --border:  #2e4058;
+      --accent:  #38bdf8;
+      --accent2: #0ea5e9;
+      --success: #4ade80;
+      --error:   #f87171;
+      --text:    #f0f6ff;
+      --muted:   #7a9ab8;
+      --mono:    'IBM Plex Mono', monospace;
+      --sans:    'Inter', sans-serif;
+    }
+
+    body {
+      width: 380px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 15px;
+      user-select: none;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 18px 14px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg2);
+    }
+
+    .logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent2), var(--accent));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 13px;
+      color: #fff;
+      letter-spacing: -0.5px;
+      flex-shrink: 0;
+    }
+
+    .header-text { flex: 1; }
+    .header-title {
+      font-family: var(--mono);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: 0.5px;
+    }
+    .header-sub {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* ── BODY ── */
+    .body { padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; }
+
+    /* ── BOUTONS ── */
+    .btn-action {
+      width: 100%;
+      padding: 13px 18px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--bg2);
+      color: var(--muted);
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s, background 0.15s, transform 0.1s;
+    }
+    .btn-action:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(56, 189, 248, 0.07);
+      transform: translateY(-1px);
+    }
+    .btn-action:active { transform: translateY(0); }
+    .btn-action:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+    .btn-action .btn-inner {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-action .btn-label { flex: 1; text-align: left; }
+
+    /* ── KBD ── */
+    .btn-action kbd {
+      display: inline-block;
+      padding: 2px 7px;
+      border: 1px solid currentColor;
+      border-radius: 4px;
+      font-family: var(--mono);
+      font-size: 11px;
+      opacity: 0.55;
+      letter-spacing: 0.3px;
+      flex-shrink: 0;
+    }
+
+    /* ── STATUS ── */
+    #status {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 14px;
+      border-radius: 9px;
+      font-size: 14px;
+      font-family: var(--sans);
+      animation: fadeIn 0.2s ease;
+    }
+    #status.show    { display: flex; }
+    #status.success { background: rgba(74,222,128,0.1);  border: 1px solid rgba(74,222,128,0.3);  color: var(--success); }
+    #status.error   { background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); color: var(--error);   }
+    #status.loading { background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.25); color: var(--accent);  }
+
+    .status-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+      flex-shrink: 0;
+    }
+    #status.loading .status-dot { animation: pulse 1s infinite; }
+
+    /* ── DIVIDER ── */
+    .divider { height: 1px; background: var(--border); margin: 4px 0; }
+
+    /* ── INFO GRID ── */
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .info-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+    }
+    .info-card .label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+    .info-card .value {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .info-card .value.accent { color: var(--accent); }
+    .info-card .value.tag {
+      display: inline-block;
+      background: rgba(56,189,248,0.12);
+      color: var(--accent);
+      border-radius: 4px;
+      padding: 2px 7px;
+      font-size: 12px;
+    }
+
+    /* ── FOOTER ── */
+    .footer {
+      padding: 10px 18px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-version { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+    .footer-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); }
+    .footer-dot.active { background: var(--success); box-shadow: 0 0 5px var(--success); }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.3; }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="logo">SN</div>
+    <div class="header-text">
+      <div class="header-title">INCIDENT HELPER</div>
+      <div class="header-sub">ServiceNow · Auto-fill</div>
+    </div>
+  </div>
+
+  <div class="body">
+
+    <!-- 1. Trame Assistance -->
+    <button class="btn-action" id="btnAssistance">
+      <div class="btn-inner">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+        <span class="btn-label">Trame Assistance</span>
+        <kbd>Alt+W</kbd>
+      </div>
+    </button>
+
+    <!-- 2. Trame Tech -->
+    <button class="btn-action" id="btnTrame">
+      <div class="btn-inner">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/>
+          <polyline points="10 9 9 9 8 9"/>
+        </svg>
+        <span class="btn-label">Trame Tech</span>
+        <kbd>Alt+X</kbd>
+      </div>
+    </button>
+
+    <!-- 3. Remplir trame existante -->
+    <button class="btn-action" id="btnRun">
+      <div class="btn-inner">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="5 3 19 12 5 21 5 3"/>
+        </svg>
+        <span class="btn-label">Remplir trame existante</span>
+        <kbd>Alt+V</kbd>
+      </div>
+    </button>
+
+    <div id="status">
+      <div class="status-dot"></div>
+      <span id="statusText"></span>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="label">Entité</div>
+        <div class="value accent" id="infoEntity">—</div>
+      </div>
+      <div class="info-card copyable" id="cardShortcuts" style="cursor:pointer;" title="Ouvrir les raccourcis">
+        <div class="label">Raccourcis</div>
+        <div class="value accent" style="display:flex;align-items:center;gap:6px;">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Gérer
+        </div>
+      </div>
+      <div class="info-card">
+        <div class="label">Login Windows</div>
+        <div class="value" id="infoLogin">—</div>
+      </div>
+      <div class="info-card">
+        <div class="label">Mode</div>
+        <div class="value" id="infoMode">—</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <span class="footer-version">v1.0.0</span>
+    <div class="footer-dot" id="footerDot"></div>
+  </div>
+
+  <script src="popup.js"></script>
+
+<script>
+  document.getElementById('cardShortcuts').addEventListener('click', async () => {
+
+    try {
+
+      await chrome.tabs.create({
+        url: 'chrome://extensions/shortcuts'
+      });
+
+    } catch (err) {
+
+      console.error(err);
+
+      alert(
+        'Ouvre manuellement :\nedge://extensions/shortcuts'
+      );
+    }
+  });
+</script>
+</body>
+</html>
