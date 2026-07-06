@@ -100,14 +100,9 @@
   const entityAcronym = isAgenceGan ? 'GAN AGT' : resolveAcronym(companyRaw);
   const FALLBACK      = '⚠️ inconnu';
 
-  let identifiantLine, prenomNomLine;
-  if (isAgenceGan) {
-    identifiantLine = `Code Agence : ${windowsLogin || FALLBACK}`;
-    prenomNomLine   = `Nom Agence : ${beneficiaryName || callerName || FALLBACK}`;
-  } else {
-    identifiantLine = `Identifiant : ${windowsLogin || callerName || FALLBACK}`;
-    prenomNomLine   = `Prénom / Nom : ${beneficiaryName || callerName || FALLBACK}`;
-  }
+const agenceBlock = isAgenceGan
+  ? `Code Agence : ${windowsLogin || FALLBACK}\nNom Agence : ${beneficiaryName || callerName || FALLBACK}\n`
+  : '';
 
   const needSplit = callerName && beneficiaryName && callerName !== beneficiaryName;
   const headerDeclarant = needSplit ? `Nom prénom déclarant : ${callerName}\nBénéficiaire :\n` : '';
@@ -115,9 +110,9 @@
   const trame =
 `La sollicitation concerne un dysfonctionnement sur 
  
-${headerDeclarant}${identifiantLine}
-${prenomNomLine}
-Téléphone : ${phoneNumber || FALLBACK}
+${headerDeclarant}Identifiant : ${isAgenceGan ? '' : (windowsLogin || callerName || FALLBACK)}
+Prénom / Nom : ${isAgenceGan ? '' : (beneficiaryName || callerName || FALLBACK)}
+${agenceBlock}Téléphone : ${phoneNumber || FALLBACK}
 Matériel associé : ${hardware || FALLBACK}
 IP : 
  

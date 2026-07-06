@@ -92,8 +92,8 @@
     .btn-action:hover {
       border-color: var(--accent);
       color: var(--accent);
-      background: rgba(56, 189, 248, 0.07);
-      transform: translateY(-1px);
+      background: rgba(21, 174, 239, 0.07);
+      transform: translateY(-5px);
     }
     .btn-action:active { transform: translateY(0); }
     .btn-action:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
@@ -113,7 +113,7 @@
       border: 1px solid currentColor;
       border-radius: 4px;
       font-family: var(--mono);
-      font-size: 11px;
+      font-size: 15px;
       opacity: 0.55;
       letter-spacing: 0.3px;
       flex-shrink: 0;
@@ -265,29 +265,7 @@
 
     <div class="divider"></div>
 
-    <div class="info-grid">
-      <div class="info-card">
-        <div class="label">Entité</div>
-        <div class="value accent" id="infoEntity">—</div>
-      </div>
-      <div class="info-card copyable" id="cardShortcuts" style="cursor:pointer;" title="Ouvrir les raccourcis">
-        <div class="label">Raccourcis</div>
-        <div class="value accent" style="display:flex;align-items:center;gap:6px;">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-          Gérer
-        </div>
-      </div>
-      <div class="info-card">
-        <div class="label">Login Windows</div>
-        <div class="value" id="infoLogin">—</div>
-      </div>
-      <div class="info-card">
-        <div class="label">Mode</div>
-        <div class="value" id="infoMode">—</div>
-      </div>
-    </div>
-
-  </div>
+    
 
   <div class="footer">
     <span class="footer-version">v1.0.0</span>
@@ -296,24 +274,5 @@
 
   <script src="popup.js"></script>
 
-<script>
-  document.getElementById('cardShortcuts').addEventListener('click', async () => {
-
-    try {
-
-      await chrome.tabs.create({
-        url: 'chrome://extensions/shortcuts'
-      });
-
-    } catch (err) {
-
-      console.error(err);
-
-      alert(
-        'Ouvre manuellement :\nedge://extensions/shortcuts'
-      );
-    }
-  });
-</script>
 </body>
 </html>

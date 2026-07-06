@@ -3,10 +3,6 @@ const btnTrame      = document.getElementById('btnTrame');
 const btnAssistance = document.getElementById('btnAssistance');
 const statusEl      = document.getElementById('status');
 const statusText    = document.getElementById('statusText');
-const infoEntity    = document.getElementById('infoEntity');
-const infoLogin     = document.getElementById('infoLogin');
-const infoMode      = document.getElementById('infoMode');
-const footerDot     = document.getElementById('footerDot');
 
 // =========================
 // STATUS
@@ -17,19 +13,6 @@ function setStatus(type, text) {
   statusText.textContent = text;
 }
 
-// =========================
-// UI INFOS
-// =========================
-
-function updateInfoCards(result) {
-  if (!result) return;
-  infoEntity.textContent   = result.entity || '—';
-  infoLogin.textContent    = result.login  || '—';
-  infoMode.innerHTML = result.isAgence
-    ? '<span class="tag">Agence GAN</span>'
-    : 'Standard';
-  footerDot.classList.add('active');
-}
 
 // =========================
 // HELPER : frame incident
@@ -68,7 +51,6 @@ async function runScript(file, btn, successMsg) {
     else if (result.error) setStatus('error', result.error);
     else {
       setStatus('success', successMsg);
-      updateInfoCards(result);
     }
   } catch (err) {
     console.error(err);
